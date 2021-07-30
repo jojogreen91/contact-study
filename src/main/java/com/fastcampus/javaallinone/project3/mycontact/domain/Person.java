@@ -1,10 +1,10 @@
 package com.fastcampus.javaallinone.project3.mycontact.domain;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,10 +31,15 @@ public class Person {
 
     private String address;
 
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     private String job;
 
     @ToString.Exclude
     private String phoneNumber;
+
+    // {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE} == CascadeType.ALL
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Block block;
 }
