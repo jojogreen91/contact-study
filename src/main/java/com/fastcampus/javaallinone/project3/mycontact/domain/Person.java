@@ -1,9 +1,12 @@
 package com.fastcampus.javaallinone.project3.mycontact.domain;
 
+import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,7 +34,9 @@ public class Person {
 
     private String address;
 
-    private LocalDate birthday;
+    @Embedded
+    @Valid
+    private Birthday birthday;
 
     private String job;
 

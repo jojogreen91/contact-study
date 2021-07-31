@@ -2,8 +2,10 @@ package com.fastcampus.javaallinone.project3.mycontact.service;
 
 import com.fastcampus.javaallinone.project3.mycontact.domain.Block;
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
+import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import com.fastcampus.javaallinone.project3.mycontact.repository.BlockRepository;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
+import com.sun.istack.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,44 +49,6 @@ class PersonServiceTest {
         Person person = personService.getPerson(4L);
 
         System.out.println(person);
-    }
-
-    @Test
-    void findByBloodType () {
-        givenPerson("kim", 12, "A");
-        givenPerson("jo", 19, "AB");
-        givenPerson("ko", 11, "A");
-        givenPerson("park", 10, "O");
-
-        List<Person> result = personRepository.findByBloodType("A");
-
-        result.forEach(f -> System.out.println(f.getName()));
-    }
-
-    @Test
-    void findByBirthdayBetween () {
-
-        givenPerson("kim", 12, "A");
-        givenPerson("jo", 19, "AB");
-        givenPerson("ko", 11, "A");
-        givenPerson("park", 10, "O");
-
-        Person person1 = personRepository.findById(1L).get();
-        person1.setBirthday(LocalDate.of(1991, 8, 14));
-        personRepository.save(person1);
-        Person person2 = personRepository.findById(2L).get();
-        person2.setBirthday(LocalDate.of(1991, 9, 10));
-        personRepository.save(person2);
-        Person person3 = personRepository.findById(3L).get();
-        person3.setBirthday(LocalDate.of(1991, 8, 24));
-        personRepository.save(person3);
-        Person person4 = personRepository.findById(4L).get();
-        person4.setBirthday(LocalDate.of(1991, 10, 14));
-        personRepository.save(person4);
-
-        List<Person> result = personRepository.findByBirthdayBetween(LocalDate.of(1991, 8, 1), LocalDate.of(1991, 8, 31));
-
-        result.forEach(f -> System.out.println(f.getName()));
     }
 
     @Test

@@ -29,6 +29,7 @@ class HelloWorldControllerTest {
         assertThat(helloWorldController.helloWorld()).isEqualTo("HelloWorld");
     }
 
+    // MockMvc 사용
     @Test
     void mockMvcTest () throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(helloWorldController).build();
