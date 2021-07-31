@@ -22,13 +22,20 @@ public class PersonService {
     private BlockRepository blockRepository;
 
     public List<Person> getPeopleExcludeBlocks () {
-        List<Person> people = personRepository.findAll();
+        /*List<Person> people = personRepository.findAll();
 
 //        List<Block> blocks = blockRepository.findAll();
 //        List<String> blockNames = blocks.stream().map(b -> b.getName()).collect(Collectors.toList());
 //        return people.stream().filter(person -> !blockNames.contains(person.getName())).collect(Collectors.toList());
 
-        return people.stream().filter(f -> f.getBlock() == null).collect(Collectors.toList());
+        return people.stream().filter(f -> f.getBlock() == null).collect(Collectors.toList());*/
+
+        return personRepository.findByBlockIsNull();
+    }
+
+    public List<Person> getPeopleByName (String name) {
+
+        return personRepository.findByName(name);
     }
 
     // @Transactional
