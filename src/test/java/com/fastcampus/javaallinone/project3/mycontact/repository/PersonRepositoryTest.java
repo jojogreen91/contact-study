@@ -6,6 +6,7 @@ import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Transactional
 @SpringBootTest
 class PersonRepositoryTest {
 
@@ -38,9 +40,11 @@ class PersonRepositoryTest {
         assertThat(people.get(0).getName()).isEqualTo("jo");
         assertThat(people.get(0).getAge()).isEqualTo(20);
         assertThat(people.get(0).getBloodType()).isEqualTo("O");
+
+        personRepository.deleteAll();
     }
 
-    @Test
+    /*@Test
     void equalsAndHashCodeTest () {
         Person person1 = new Person("jo", 20, "O");
         Person person2 = new Person("jo", 20, "O");
@@ -54,7 +58,7 @@ class PersonRepositoryTest {
 
         System.out.println(testMap);
         System.out.println(testMap.get(person2));
-    }
+    }*/
 
     @Test
     void findByBloodType () {
@@ -66,6 +70,8 @@ class PersonRepositoryTest {
         List<Person> result = personRepository.findByBloodType("A");
 
         result.forEach(f -> System.out.println(f.getName()));
+
+        personRepository.deleteAll();
     }
 
     @Test
@@ -79,14 +85,17 @@ class PersonRepositoryTest {
         List<Person> result = personRepository.findByMonthOfBirthday(8);
 
         result.forEach(f -> System.out.println(f));
+
+        personRepository.deleteAll();
     }
 
     private void givenPerson(String name, int age, String bloodType) {
-        givenPerson(name, age, bloodType, null);
+        Person person = new Person(name, age, bloodType);
+
+        personRepository.save(person);
     }
 
     private void givenPerson(String name, int age, String bloodType, LocalDate birthday) {
-
         Person person = new Person(name, age, bloodType);
 
         Birthday bDay = new Birthday(birthday);

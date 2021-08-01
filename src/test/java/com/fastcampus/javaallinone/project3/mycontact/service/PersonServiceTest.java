@@ -9,6 +9,7 @@ import com.sun.istack.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +31,7 @@ class PersonServiceTest {
         givenPeople();
 
         List<Person> result = personService.getPeopleExcludeBlocks();
+
         result.stream().forEach(rslt -> System.out.print(rslt.getName() + " "));
     }
 
@@ -51,7 +53,7 @@ class PersonServiceTest {
         System.out.println(person);
     }
 
-    @Test
+    /*@Test
     void cascadeTest () {
         givenPeople();
 
@@ -74,7 +76,10 @@ class PersonServiceTest {
         personRepository.delete(person);
         personRepository.findAll().stream().forEach(f -> System.out.println(f));
         blockRepository.findAll().stream().forEach(f -> System.out.println(f));
-    }
+
+        personRepository.deleteAll();
+        blockRepository.deleteAll();
+    }*/
 
     private void givenPeople() {
         givenPerson("jo", 20, "O");
