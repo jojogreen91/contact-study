@@ -55,6 +55,39 @@ class PersonControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    void modifyPerson () throws Exception {
+
+        givenPerson("jo", 20, "O");
+
+        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/person/1")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content("{\n" +
+                                "  \"name\" : \"jo\",\n" +
+                                "  \"age\" : \"18\",\n" +
+                                "  \"bloodType\" : \"O\"\n" +
+                                "}"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void modifyName () throws Exception {
+
+        givenPerson("jo", 20, "O");
+
+        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/person/1")
+                .param("name", "cho"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
     void givenPerson (String name, int age, String bloodType) {
 
         Person person = new Person(name, age, bloodType);
