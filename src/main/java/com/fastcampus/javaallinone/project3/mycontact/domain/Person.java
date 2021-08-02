@@ -2,11 +2,14 @@ package com.fastcampus.javaallinone.project3.mycontact.domain;
 
 import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,14 +25,19 @@ public class Person {
     private Long id;
 
     @NonNull
+    @NotEmpty
+    @Column(nullable = false)
     private String name;
 
     @NonNull
+    @Min(1)
     private int age;
 
     private String hobby;
 
     @NonNull
+    @NotEmpty
+    @Column(nullable = false)
     private String bloodType;
 
     private String address;
