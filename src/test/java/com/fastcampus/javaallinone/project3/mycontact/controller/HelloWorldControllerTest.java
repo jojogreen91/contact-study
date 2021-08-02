@@ -19,6 +19,7 @@ class HelloWorldControllerTest {
     @Autowired
     private HelloWorldController helloWorldController;
 
+    // MockMvc 선언
     private MockMvc mockMvc;
 
     @Test
