@@ -28,8 +28,8 @@ class PersonRepositoryTest {
     void crud () {
         Person person = new Person();
         person.setName("jo");
-        person.setAge(20);
         person.setBloodType("O");
+        person.setBirthday(new Birthday(LocalDate.of(1991, 10, 14)));
 
         personRepository.save(person);
 
@@ -38,7 +38,7 @@ class PersonRepositoryTest {
         List<Person> people = personRepository.findAll();
         assertThat(people.size()).isEqualTo(1);
         assertThat(people.get(0).getName()).isEqualTo("jo");
-        assertThat(people.get(0).getAge()).isEqualTo(20);
+        assertThat(people.get(0).getAge()).isEqualTo(31);
         assertThat(people.get(0).getBloodType()).isEqualTo("O");
 
         personRepository.deleteAll();
@@ -62,10 +62,10 @@ class PersonRepositoryTest {
 
     @Test
     void findByBloodType () {
-        givenPerson("kim", 12, "A");
-        givenPerson("jo", 19, "AB");
-        givenPerson("ko", 11, "A");
-        givenPerson("park", 10, "O");
+        givenPerson("kim", "A");
+        givenPerson("jo", "AB");
+        givenPerson("ko", "A");
+        givenPerson("park", "O");
 
         List<Person> result = personRepository.findByBloodType("A");
 
@@ -77,10 +77,10 @@ class PersonRepositoryTest {
     @Test
     void findByMonthOfBirthday () {
 
-        givenPerson("kim", 12, "A", LocalDate.of(1991, 8, 14));
-        givenPerson("jo", 19, "AB", LocalDate.of(1981, 6, 20));
-        givenPerson("ko", 11, "A", LocalDate.of(1997, 8, 3));
-        givenPerson("park", 10, "O", LocalDate.of(1890, 3, 21));
+        givenPerson("kim", "A", LocalDate.of(1991, 8, 14));
+        givenPerson("jo", "AB", LocalDate.of(1981, 6, 20));
+        givenPerson("ko", "A", LocalDate.of(1997, 8, 3));
+        givenPerson("park", "O", LocalDate.of(1890, 3, 21));
 
         List<Person> result = personRepository.findByMonthOfBirthday(8);
 
@@ -89,14 +89,14 @@ class PersonRepositoryTest {
         personRepository.deleteAll();
     }
 
-    private void givenPerson(String name, int age, String bloodType) {
-        Person person = new Person(name, age, bloodType);
+    private void givenPerson(String name, String bloodType) {
+        Person person = new Person(name, bloodType);
 
         personRepository.save(person);
     }
 
-    private void givenPerson(String name, int age, String bloodType, LocalDate birthday) {
-        Person person = new Person(name, age, bloodType);
+    private void givenPerson(String name, String bloodType, LocalDate birthday) {
+        Person person = new Person(name, bloodType);
 
         Birthday bDay = new Birthday(birthday);
         person.setBirthday(bDay);

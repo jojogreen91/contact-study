@@ -34,10 +34,6 @@ public class Person {
     @Column(nullable = false)
     private String name;
 
-    @NonNull
-    @Min(1)
-    private int age;
-
     private String hobby;
 
     @NonNull
@@ -68,10 +64,6 @@ public class Person {
     // Entity 를 업데이트 할 때 PersonDto 를 이용해서 수정 할 멤버변수가 존재 하지 않을 때는 업데이트를 안하기 위한 메서드
     public void set (PersonDto personDto) {
 
-        if (personDto.getAge() != 0) {
-            this.setAge(personDto.getAge());
-        }
-
         if (!StringUtils.isEmpty(personDto.getHobby())) {
             this.setHobby(personDto.getHobby());
         }
@@ -91,5 +83,18 @@ public class Person {
         if (!StringUtils.isEmpty(personDto.getPhoneNumber())) {
             this.setPhoneNumber(personDto.getPhoneNumber());
         }
+    }
+
+    public Integer getAge () {
+        if (this.birthday != null) {
+            return LocalDate.now().getYear() - this.birthday.getYearOfBirthday() + 1;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public boolean isBirthdayToday () {
+        return LocalDate.now().equals(LocalDate.of(this.birthday.getYearOfBirthday(), this.birthday.getMonthOfBirthday(), this.birthday.getDayOfBirthday()));
     }
 }

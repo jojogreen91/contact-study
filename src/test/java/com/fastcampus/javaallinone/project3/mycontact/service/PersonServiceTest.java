@@ -82,18 +82,18 @@ class PersonServiceTest {
     }*/
 
     private void givenPeople() {
-        givenPerson("jo", 20, "O");
-        givenPerson("park", 18, "B");
-        givenPerson("kim", 22, "A");
-        givenBlockPerson("kim", 28, "AB");
+        givenPerson("jo", "O");
+        givenPerson("park", "B");
+        givenPerson("kim", "A");
+        givenBlockPerson("kim", "AB");
     }
 
-    private void givenPerson(String name, int age, String bloodType) {
-        personRepository.save(new Person(name, age, bloodType));
+    private void givenPerson(String name, String bloodType) {
+        personRepository.save(new Person(name, bloodType));
     }
 
-    private void givenBlockPerson(String name, int age, String bloodType) {
-        Person person = new Person(name, age, bloodType);
+    private void givenBlockPerson(String name, String bloodType) {
+        Person person = new Person(name, bloodType);
 
         // person 의 멤버변수 block 의 cascade 영속성
         person.setBlock(new Block(name));

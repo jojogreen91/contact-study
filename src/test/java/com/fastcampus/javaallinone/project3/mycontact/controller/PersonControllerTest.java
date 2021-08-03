@@ -10,12 +10,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 class PersonControllerTest {
 
     @Autowired
@@ -33,7 +35,7 @@ class PersonControllerTest {
     @Test
     void getPerson () throws Exception {
 
-        givenPerson("jo", 20, "O");
+        givenPerson("jo", "O");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/person/1"))
@@ -60,7 +62,7 @@ class PersonControllerTest {
     @Test
     void modifyPerson () throws Exception {
 
-        givenPerson("jo", 20, "O");
+        givenPerson("jo", "O");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/person/1")
@@ -77,7 +79,7 @@ class PersonControllerTest {
     @Test
     void modifyName () throws Exception {
 
-        givenPerson("jo", 20, "O");
+        givenPerson("jo", "O");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/person/1")
@@ -89,7 +91,7 @@ class PersonControllerTest {
     @Test
     void deletePerson () throws Exception {
 
-        givenPerson("jo", 20, "O");
+        givenPerson("jo", "O");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/person/1"))
@@ -97,9 +99,9 @@ class PersonControllerTest {
                 .andExpect(status().isOk());
     }
 
-    void givenPerson (String name, int age, String bloodType) {
+    void givenPerson (String name, String bloodType) {
 
-        Person person = new Person(name, age, bloodType);
+        Person person = new Person(name, bloodType);
         personRepository.save(person);
     }
 }
