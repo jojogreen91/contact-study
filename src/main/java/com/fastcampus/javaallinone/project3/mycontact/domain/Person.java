@@ -6,6 +6,8 @@ import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "deleted = false")
 public class Person {
 
     @Id
@@ -54,11 +57,15 @@ public class Person {
     @ToString.Exclude
     private String phoneNumber;
 
+    @ColumnDefault("0")
+    private boolean deleted;
+
     // {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE} == CascadeType.ALL
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Block block;
 
+    // Entity 를 업데이트 할 때 PersonDto 를 이용해서 수정 할 멤버변수가 존재 하지 않을 때는 업데이트를 안하기 위한 메서드
     public void set (PersonDto personDto) {
 
         if (personDto.getAge() != 0) {

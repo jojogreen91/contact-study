@@ -2,6 +2,7 @@ package com.fastcampus.javaallinone.project3.mycontact.controller;
 
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,12 +25,15 @@ class PersonControllerTest {
 
     private MockMvc mockMvc;
 
+    @BeforeEach
+    void beforeEach () {
+        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+    }
+
     @Test
     void getPerson () throws Exception {
 
         givenPerson("jo", 20, "O");
-
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/person/1"))
@@ -39,8 +43,6 @@ class PersonControllerTest {
 
     @Test
     void postPerson () throws Exception {
-
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
 
         mockMvc.perform(
                 // MockMvcRequestBuilders.post("/api/person?name=jo&age=20&bloodType=O")) -> @RequestParam 했을 때
@@ -60,8 +62,6 @@ class PersonControllerTest {
 
         givenPerson("jo", 20, "O");
 
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
-
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/person/1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -79,11 +79,20 @@ class PersonControllerTest {
 
         givenPerson("jo", 20, "O");
 
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
-
         mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/person/1")
                 .param("name", "cho"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deletePerson () throws Exception {
+
+        givenPerson("jo", 20, "O");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/person/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
