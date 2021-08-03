@@ -1,16 +1,20 @@
 package com.fastcampus.javaallinone.project3.mycontact.controller;
 
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
+import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,7 +30,6 @@ class PersonControllerTest {
     private PersonRepository personRepository;
 
     private MockMvc mockMvc;
-
     @BeforeEach
     void beforeEach () {
         mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
@@ -35,7 +38,7 @@ class PersonControllerTest {
     @Test
     void getPerson () throws Exception {
 
-        givenPerson("jo", "O");
+        givenPerson("jo");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/person/1"))
@@ -51,9 +54,7 @@ class PersonControllerTest {
                 MockMvcRequestBuilders.post("/api/person")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content("{\n" +
-                            "  \"name\" : \"park\",\n" +
-                            "  \"age\" : \"18\",\n" +
-                            "  \"bloodType\" : \"O\"\n" +
+                            "  \"name\" : \"park\"\n" +
                             "}"))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -62,15 +63,13 @@ class PersonControllerTest {
     @Test
     void modifyPerson () throws Exception {
 
-        givenPerson("jo", "O");
+        givenPerson("jo");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/person/1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content("{\n" +
-                                "  \"name\" : \"jo\",\n" +
-                                "  \"age\" : \"18\",\n" +
-                                "  \"bloodType\" : \"O\"\n" +
+                                "  \"name\" : \"park\"\n" +
                                 "}"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -79,7 +78,7 @@ class PersonControllerTest {
     @Test
     void modifyName () throws Exception {
 
-        givenPerson("jo", "O");
+        givenPerson("jo");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/person/1")
@@ -91,7 +90,7 @@ class PersonControllerTest {
     @Test
     void deletePerson () throws Exception {
 
-        givenPerson("jo", "O");
+        givenPerson("jo");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/person/1"))
@@ -99,9 +98,11 @@ class PersonControllerTest {
                 .andExpect(status().isOk());
     }
 
-    void givenPerson (String name, String bloodType) {
+    void givenPerson (String name) {
 
-        Person person = new Person(name, bloodType);
+        Person person = new Person(name);
+        person.setHobby("coding");
+        person.setBirthday(Birthday.of(LocalDate.of(1991, 10, 14)));
         personRepository.save(person);
     }
 }

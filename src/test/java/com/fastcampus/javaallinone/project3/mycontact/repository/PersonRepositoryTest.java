@@ -1,6 +1,5 @@
 package com.fastcampus.javaallinone.project3.mycontact.repository;
 
-import com.fastcampus.javaallinone.project3.mycontact.domain.Block;
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
 import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import org.junit.jupiter.api.Test;
@@ -9,13 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -28,8 +23,7 @@ class PersonRepositoryTest {
     void crud () {
         Person person = new Person();
         person.setName("jo");
-        person.setBloodType("O");
-        person.setBirthday(new Birthday(LocalDate.of(1991, 10, 14)));
+        person.setBirthday(Birthday.of(LocalDate.of(1991, 10, 14)));
 
         personRepository.save(person);
 
@@ -39,7 +33,6 @@ class PersonRepositoryTest {
         assertThat(people.size()).isEqualTo(1);
         assertThat(people.get(0).getName()).isEqualTo("jo");
         assertThat(people.get(0).getAge()).isEqualTo(31);
-        assertThat(people.get(0).getBloodType()).isEqualTo("O");
 
         personRepository.deleteAll();
     }
@@ -61,26 +54,12 @@ class PersonRepositoryTest {
     }*/
 
     @Test
-    void findByBloodType () {
-        givenPerson("kim", "A");
-        givenPerson("jo", "AB");
-        givenPerson("ko", "A");
-        givenPerson("park", "O");
-
-        List<Person> result = personRepository.findByBloodType("A");
-
-        result.forEach(f -> System.out.println(f.getName()));
-
-        personRepository.deleteAll();
-    }
-
-    @Test
     void findByMonthOfBirthday () {
 
-        givenPerson("kim", "A", LocalDate.of(1991, 8, 14));
-        givenPerson("jo", "AB", LocalDate.of(1981, 6, 20));
-        givenPerson("ko", "A", LocalDate.of(1997, 8, 3));
-        givenPerson("park", "O", LocalDate.of(1890, 3, 21));
+        givenPerson("kim", LocalDate.of(1991, 8, 14));
+        givenPerson("jo", LocalDate.of(1981, 6, 20));
+        givenPerson("ko", LocalDate.of(1997, 8, 3));
+        givenPerson("park", LocalDate.of(1890, 3, 21));
 
         List<Person> result = personRepository.findByMonthOfBirthday(8);
 
@@ -89,16 +68,16 @@ class PersonRepositoryTest {
         personRepository.deleteAll();
     }
 
-    private void givenPerson(String name, String bloodType) {
-        Person person = new Person(name, bloodType);
+    private void givenPerson(String name) {
+        Person person = new Person(name);
 
         personRepository.save(person);
     }
 
-    private void givenPerson(String name, String bloodType, LocalDate birthday) {
-        Person person = new Person(name, bloodType);
+    private void givenPerson(String name, LocalDate birthday) {
+        Person person = new Person(name);
 
-        Birthday bDay = new Birthday(birthday);
+        Birthday bDay = Birthday.of(birthday);
         person.setBirthday(bDay);
 
         personRepository.save(person);

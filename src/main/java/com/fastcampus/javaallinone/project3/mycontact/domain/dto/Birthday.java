@@ -22,7 +22,7 @@ public class Birthday {
     private Integer monthOfBirthday;
     private Integer dayOfBirthday;
 
-    public Birthday (LocalDate birthday) {
+    private Birthday (LocalDate birthday) {
         this.yearOfBirthday = birthday.getYear();
         this.monthOfBirthday = birthday.getMonthValue();
         this.dayOfBirthday = birthday.getDayOfMonth();
