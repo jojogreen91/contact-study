@@ -57,5 +57,8 @@ public class PersonController {
 
         log.info("person -> {}", personRepository.findAll());
         log.info("deleted -> {}", personRepository.findPeopleDeleted());
+
+        // 이런 boolean 리턴 값을 활용해서 제대로 삭제 되었는지 확인 할 수도 있다.
+        // return personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(id));
     }
 }

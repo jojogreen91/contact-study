@@ -1,8 +1,11 @@
 package com.fastcampus.javaallinone.project3.mycontact.controller;
 
+import com.fastcampus.javaallinone.project3.mycontact.controller.dto.PersonDto;
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
 import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -28,6 +33,8 @@ class PersonControllerTest {
     private PersonController personController;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
     @BeforeEach
@@ -65,14 +72,27 @@ class PersonControllerTest {
 
         givenPerson("jo");
 
+        PersonDto personDto = PersonDto.builder()
+                .name("jo")
+                .address("부산")
+                .birthday(LocalDate.of(1991, 10, 14))
+                .hobby("coding")
+                .build();
+
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/person/1")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content("{\n" +
-                                "  \"name\" : \"park\"\n" +
-                                "}"))
+                        .content(toJasonString(personDto)))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        Person result = personRepository.findById(1L).get();
+        assertAll(
+                () -> assertThat(result.getName()).isEqualTo("jo"),
+                () -> assertThat(result.getAddress()).isEqualTo("부산"),
+                () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.of(1991, 10, 14))),
+                () -> assertThat(result.getHobby()).isEqualTo("coding")
+        );
     }
 
     @Test
@@ -82,9 +102,11 @@ class PersonControllerTest {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/person/1")
-                .param("name", "cho"))
+                .param("name", "jojo green"))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        assertThat(personRepository.findById(1L).get().getName().equals("jojo green"));
     }
 
     @Test
@@ -96,6 +118,9 @@ class PersonControllerTest {
                 MockMvcRequestBuilders.delete("/api/person/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
+                //.andExpect(content().string("true")) -> Response 되는 내용을 통해 테스트 검증하는 방
+
+        assertTrue(personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(1L)));
     }
 
     void givenPerson (String name) {
@@ -104,5 +129,9 @@ class PersonControllerTest {
         person.setHobby("coding");
         person.setBirthday(Birthday.of(LocalDate.of(1991, 10, 14)));
         personRepository.save(person);
+    }
+
+    private String toJasonString (PersonDto personDto) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(personDto);
     }
 }
