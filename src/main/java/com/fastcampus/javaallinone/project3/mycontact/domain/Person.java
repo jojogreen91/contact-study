@@ -5,6 +5,7 @@ import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Where;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "deleted = false")
+@Builder
+@Accessors(chain = true)
 public class Person {
 
     @Id
