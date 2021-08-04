@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,8 +23,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Transactional
@@ -35,11 +35,13 @@ class PersonControllerTest {
     private PersonRepository personRepository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private MappingJackson2HttpMessageConverter messageConverter;
 
     private MockMvc mockMvc;
     @BeforeEach
     void beforeEach () {
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(personController).setMessageConverters(messageConverter).build();
     }
 
     @Test
@@ -50,7 +52,16 @@ class PersonControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/person/1"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("jo"))
+                .andExpect(jsonPath("$.job").isEmpty())
+                .andExpect(jsonPath("$.hobby").value("coding"))
+                /*.andExpect(jsonPath("$.birthday.yearOfBirthday").value(1991))
+                .andExpect(jsonPath("$.birthday.monthOfBirthday").value(10))
+                .andExpect(jsonPath("$.birthday.dayOfBirthday").value(14))*/
+                .andExpect(jsonPath("$.birthday").value("1991-10-14"))
+                .andExpect(jsonPath("$.age").isNumber())
+                .andExpect(jsonPath("$.birthdayToday").isBoolean());
     }
 
     @Test
