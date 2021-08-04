@@ -1,5 +1,6 @@
 package com.fastcampus.javaallinone.project3.mycontact.service;
 
+import com.fastcampus.javaallinone.project3.mycontact.controller.dto.PersonDto;
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
 import org.assertj.core.util.Lists;
@@ -11,11 +12,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+// Mockito 설정
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
 
@@ -27,12 +32,11 @@ class PersonServiceTest {
     @Test
     void getPeopleByName () {
 
-        givenPeople();
-
+        // Mockito 사용
         when (personRepository.findByName("jo"))
                 .thenReturn(Lists.newArrayList(new Person("jo")));
 
-        List<Person> result = personRepository.findByName("jo");
+        List<Person> result = personService.getPeopleByName("jo");
 
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getName()).isEqualTo("jo");
@@ -40,20 +44,36 @@ class PersonServiceTest {
 
     @Test
     void getPerson () {
-        givenPeople();
 
-        Person person = personService.getPerson(4L);
+        // Mockito 사용
+        when (personRepository.findById(1L))
+                .thenReturn(Optional.of(new Person("jo")));
 
-        System.out.println(person);
+        Person person = personService.getPerson(1L);
+
+        assertThat(person.getName()).isEqualTo("jo");
     }
 
-    private void givenPeople() {
-        givenPerson("jo");
-        givenPerson("park");
-        givenPerson("kim");
+    @Test
+    void getPersonIfNotFound () {
+
+        // Mockito 사용
+        when (personRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        Person person = personService.getPerson(1L);
+
+        assertThat(person).isNull();
     }
 
-    private void givenPerson(String name) {
-        personRepository.save(new Person(name));
+    @Test
+    void put () {
+
+        PersonDto personDto = PersonDto.of("jo", "coding", "부산", LocalDate.of(1991, 10, 14), "student", "010-5224-1660");
+
+        personService.put(personDto);
+
+        // Mockito 에서의 검증 방식
+        verify(personRepository, times(1)).save(any(Person.class));
     }
 }
