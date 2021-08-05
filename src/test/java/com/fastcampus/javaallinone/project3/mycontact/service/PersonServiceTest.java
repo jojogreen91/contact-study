@@ -3,6 +3,8 @@ package com.fastcampus.javaallinone.project3.mycontact.service;
 import com.fastcampus.javaallinone.project3.mycontact.controller.dto.PersonDto;
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
 import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
+import com.fastcampus.javaallinone.project3.mycontact.exception.PersonNotFoundException;
+import com.fastcampus.javaallinone.project3.mycontact.exception.RenameNotPermittedException;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -96,7 +98,8 @@ class PersonServiceTest {
                 .thenReturn(Optional.of(new Person("kim")));
 
         // Exception 이 발생한다는 것을 확인하는 코드
-        assertThrows(RuntimeException.class, () -> personService.modify(1L, mockPersonDto()));
+        // custom Exception 을 만들어서 사용해 보았다
+        assertThrows(RenameNotPermittedException.class, () -> personService.modify(1L, mockPersonDto()));
     }
 
     @Test
@@ -119,7 +122,8 @@ class PersonServiceTest {
                 .thenReturn(Optional.empty());
 
         // Exception 이 발생한다는 것을 확인하는 코드
-        assertThrows(RuntimeException.class, () -> personService.modify(1L, "park"));
+        // custom Exception 을 만들어서 사용해 보았다
+        assertThrows(PersonNotFoundException.class, () -> personService.modify(1L, "park"));
     }
 
     @Test
