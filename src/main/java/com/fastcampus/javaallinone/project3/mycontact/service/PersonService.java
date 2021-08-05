@@ -47,7 +47,8 @@ public class PersonService {
     @Transactional
     public void modify (Long id, PersonDto personDto) {
 
-        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
+        // custom Exception 을 만들어서 적용해 보았다
+        Person person = personRepository.findById(id).orElseThrow(() -> new PersonNotFoundException());
 
         // custom Exception 을 만들어서 적용해 보았다
         if (!person.getName().equals(personDto.getName())) {
