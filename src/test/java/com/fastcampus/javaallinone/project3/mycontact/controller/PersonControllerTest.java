@@ -272,11 +272,33 @@ class PersonControllerTest {
         assertTrue(personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(1L)));
     }
 
+    // 과제 : 오늘이나 내일이 생일인 친구의 목록을 얻는 Api Test
+    @Test
+    void birthdayFriends () throws Exception {
+
+        // data.sql 이 안되기 때문에 Entity 생성, 오늘 생일인 2명 내일 생일인 1명 설정
+        givenPerson("조한석", LocalDate.of(1991, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()));
+        givenPerson("박지연", LocalDate.of(1993, 1, 11));
+        givenPerson("김가연", LocalDate.of(1997, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()));
+        givenPerson("이수진", LocalDate.of(1995, LocalDate.now().plusDays(1).getMonthValue(), LocalDate.now().plusDays(1).getDayOfMonth()));
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/person/birthdayFriends"))
+                .andExpect(status().isOk());
+    }
+
     void givenPerson (String name) {
 
         Person person = new Person(name);
         person.setHobby("coding");
         person.setBirthday(Birthday.of(LocalDate.of(1991, 10, 14)));
+        personRepository.save(person);
+    }
+
+    void givenPerson (String name, LocalDate localDate) {
+
+        Person person = new Person(name);
+        person.setBirthday(Birthday.of(localDate));
         personRepository.save(person);
     }
 

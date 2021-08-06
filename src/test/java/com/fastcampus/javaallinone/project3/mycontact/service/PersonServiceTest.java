@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -174,6 +175,50 @@ class PersonServiceTest {
         personService.delete(1L);
 
         verify(personRepository, times(1)).save(argThat(new IsPersonWillBeDeleted()));
+    }
+
+    // 과제 : 오늘이나 내일이 생일인 친구의 목록을 얻는 Service Test
+    @Test
+    void birthdayFriends () {
+
+        // Mockito 사용
+        when (personRepository.findAll())
+                .thenReturn(givenPeopleList());
+
+        // 메서드 실행
+        String result = personService.birthdayFriends();
+
+        // 반환되는 String 검증
+        assertThat(result).isEqualTo("Birthday Today[조한석, 김가연] | Birthday Tomorrow[이수진]");
+    }
+
+    // 과제용 Person List 생성
+    ArrayList<Person> givenPeopleList () {
+        ArrayList<Person> people = new ArrayList<Person>();
+
+        Person person1 = Person.builder()
+                .name("조한석")
+                .birthday(Birthday.of(LocalDate.of(1991, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth())))
+                .build();
+        Person person2 = Person.builder()
+                .name("박지연")
+                .birthday(Birthday.of(LocalDate.of(1993, 1, 11)))
+                .build();
+        Person person3 = Person.builder()
+                .name("김가연")
+                .birthday(Birthday.of(LocalDate.of(1997, LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth())))
+                .build();
+        Person person4 = Person.builder()
+                .name("이수진")
+                .birthday(Birthday.of(LocalDate.of(1995, LocalDate.now().plusDays(1).getMonthValue(), LocalDate.now().plusDays(1).getDayOfMonth())))
+                .build();
+
+        people.add(person1);
+        people.add(person2);
+        people.add(person3);
+        people.add(person4);
+
+        return people;
     }
 
     private PersonDto mockPersonDto () {

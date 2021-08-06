@@ -25,6 +25,7 @@ dependencies {
 
 	// max, min, valid Annotation 을 쓸 수 있다.
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// h2 memory DB 설정
 	implementation 'com.h2database:h2'
 
 	compileOnly 'org.projectlombok:lombok'
@@ -37,6 +38,7 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
 	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
 
+	// mock test 를 위한 mockito 설정
 	testImplementation 'org.mockito:mockito-junit-jupiter'
 }
 

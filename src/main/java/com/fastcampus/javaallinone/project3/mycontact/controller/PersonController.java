@@ -76,4 +76,11 @@ public class PersonController {
         // 이런 boolean 리턴 값을 활용해서 제대로 삭제 되었는지 확인 할 수도 있다.
         // return personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(id));
     }
+
+    // 과제 : 오늘이나 내일이 생일인 친구의 목록을 얻는 Api
+    @GetMapping("/birthdayFriends")
+    public String birthdayFriends () {
+
+        return personService.birthdayFriends();
+    }
 }
