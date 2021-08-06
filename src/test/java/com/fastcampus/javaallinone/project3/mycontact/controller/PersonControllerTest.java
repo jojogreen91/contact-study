@@ -28,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -63,6 +64,25 @@ class PersonControllerTest {
                 .webAppContextSetup(wac) // 위의 3가지를 한번에 설정 할 수 있는 기능
                 .alwaysDo(print())
                 .build();
+    }
+
+    @Test
+    void getAll () throws Exception {
+        givenPerson("jo");
+        givenPerson("park");
+        givenPerson("kim");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/person")
+                        .param("page", "1")
+                        .param("size", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.totalElements").value(3)) // 전체 Person 갯수
+                .andExpect(jsonPath("$.numberOfElements").value(1)) // 해당 페이지의 Person 갯수
+                //.andExpect(jsonPath("$.content.[0].name").value("jo")) // 첫번째 페이지
+                //.andExpect(jsonPath("$.content.[1].name").value("park")) // 첫번째 페이지
+                .andExpect(jsonPath("$.content.[0].name").value("kim")); // 두번째 페이지
     }
 
     @Test
