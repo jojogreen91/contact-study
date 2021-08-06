@@ -4,6 +4,7 @@ import com.fastcampus.javaallinone.project3.mycontact.controller.dto.PersonDto;
 import com.fastcampus.javaallinone.project3.mycontact.domain.Person;
 import com.fastcampus.javaallinone.project3.mycontact.domain.dto.Birthday;
 import com.fastcampus.javaallinone.project3.mycontact.exception.RenameNotPermittedException;
+import com.fastcampus.javaallinone.project3.mycontact.exception.handler.GlobalExceptionHandler;
 import com.fastcampus.javaallinone.project3.mycontact.repository.PersonRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 
@@ -42,14 +44,25 @@ class PersonControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private MappingJackson2HttpMessageConverter messageConverter;
+    // GlobalExceptionHandler 를 적용하기 위한 설정, 테스트를 할 때
+    @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;
+    @Autowired
+    private WebApplicationContext wac;
 
     private MockMvc mockMvc;
     @BeforeEach
     void beforeEach () {
         mockMvc = MockMvcBuilders
+                /*
                 .standaloneSetup(personController)
+                .setMessageConverters(messageConverter)
+                // GlobalExceptionHandler 를 적용하기 위한 설정, 테스트를 할 때
+                .setControllerAdvice(globalExceptionHandler)
+                */
+                .webAppContextSetup(wac) // 위의 3가지를 한번에 설정 할 수 있는 기능
                 .alwaysDo(print())
-                .setMessageConverters(messageConverter).build();
+                .build();
     }
 
     @Test

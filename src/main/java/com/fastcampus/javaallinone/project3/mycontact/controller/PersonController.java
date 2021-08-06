@@ -65,20 +65,4 @@ public class PersonController {
         // 이런 boolean 리턴 값을 활용해서 제대로 삭제 되었는지 확인 할 수도 있다.
         // return personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(id));
     }
-
-    // Custom 한 Exception 에 대한 Exception Handling 설정
-    // (REST Api 사용시) Exception 이 발생 했을 때 단순히 Error 를 발생시키는 것이 아닌 해당 Exception 의 내용을 Response 로 보내는 것
-    @ExceptionHandler(value = RenameNotPermittedException.class)
-    public ResponseEntity<ErrorResponse> handleRenameNotPermittedException (RenameNotPermittedException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(value = PersonNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlePersonNotFoundException (PersonNotFoundException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(value = RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException (RuntimeException ex) {
-        log.error("서버오류 : {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error!!!"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
