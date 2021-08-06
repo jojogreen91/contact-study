@@ -6,6 +6,7 @@ import com.fastcampus.javaallinone.project3.mycontact.exception.dto.ErrorRespons
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,5 +34,11 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleRuntimeException (RuntimeException ex) {
         log.error("서버오류 : {}", ex.getMessage(), ex);
         return ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error!!!");
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentNotValidException (MethodArgumentNotValidException ex) {
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, ex.getBindingResult().getFieldError().getDefaultMessage());
     }
 }

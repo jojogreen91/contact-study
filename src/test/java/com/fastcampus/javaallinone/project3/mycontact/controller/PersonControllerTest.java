@@ -121,8 +121,39 @@ class PersonControllerTest {
                 MockMvcRequestBuilders.post("/api/person")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJasonString(personDto)))
-                .andExpect(jsonPath("$.code").value(500))
-                .andExpect(jsonPath("$.message").value("Server Error!!!"));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("I need Name!!!"));
+    }
+
+    @Test
+    void postPersonIfNameIsEmpty () throws Exception {
+
+        PersonDto personDto = new PersonDto();
+        personDto.setName("");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/person")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(toJasonString(personDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("I need Name!!!"));
+    }
+
+    @Test
+    void postPersonIfNameIsBlank () throws Exception {
+
+        PersonDto personDto = new PersonDto();
+        personDto.setName(" ");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/person")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJasonString(personDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("I need Name!!!"));
     }
 
     @Test
